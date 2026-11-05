@@ -134,6 +134,7 @@
     }
     .forum-header {
       position: relative;
+      overflow: hidden;
       display: grid;
       grid-template-columns: minmax(0,1fr) auto;
       align-items: end;
@@ -300,7 +301,6 @@
     }
     .reader-view.flat-thread-reader .reader-frame-wrap { padding: 0; background: transparent; }
     .reader-view.flat-thread-reader .chapter-frame { border: 0; }
-    .chapter-frame.is-scrollable { height: min(78vh,860px); min-height: 560px; }
 
     .users-modal { position: fixed; inset: 0; z-index: 1200; display: none; place-items: center; padding: 24px; }
     .users-modal.active { display: grid; }
@@ -356,6 +356,7 @@
     @media (max-width: 860px) {
       .forum-shell { width: min(100% - 20px,1240px); margin: 18px auto 48px; }
       .forum-header { grid-template-columns: 1fr; min-height: auto; padding: 88px 24px 32px; }
+      .forum-header::before { right: 50%; top: 46%; font-size: clamp(52px,16vw,118px); transform: translate(50%,-50%) rotate(-8deg); }
       .forum-title-line { display: block; }
       .forum-copyright { margin-top: 12px; }
       .forum-stats { justify-content: flex-start; }
@@ -375,7 +376,6 @@
       #readerBadge { align-self: start; }
       .reader-frame-wrap { padding: 6px 0 0; }
       .chapter-frame { height: 700px; border-right: 0; border-left: 0; }
-      .chapter-frame.is-scrollable { height: 72vh; min-height: 480px; }
       .users-modal { align-items: end; padding: 0; }
       .users-panel { width: 100%; max-height: 84vh; border-right: 0; border-bottom: 0; border-left: 0; border-radius: 16px 16px 0 0; }
       .users-panel-head { padding: 18px 16px 13px; }
@@ -392,6 +392,7 @@
       .password-screen::before { right: 3vw; bottom: 3vh; font-size: 42px; }
       .password-card { box-shadow: 10px 10px 0 var(--accent-deep); }
       .password-row { grid-template-columns: 1fr; }
+      .forum-header::before { top: 40%; font-size: clamp(42px,17vw,76px); }
       .topic-row { grid-template-columns: 36px minmax(0,1fr); padding: 10px 12px; }
       .topic-row:hover { padding-left: 16px; }
       .topic-avatar { width: 36px; height: 36px; }
@@ -1590,30 +1591,9 @@ button {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 7px;
-  padding: 10px;
-  background: var(--paper-soft);
-  border: 1px solid var(--line);
-  border-bottom: 0;
-}
-
-.diary-index-head {
-  grid-column: 1 / -1;
-  padding: 0 2px 8px;
-  border-bottom: 1px solid var(--line);
-}
-
-.diary-index-head strong {
-  display: block;
-  font-size: 16px;
-  line-height: 1.15;
-}
-
-.diary-index-head span {
-  display: block;
-  margin-top: 6px;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.5;
+  padding: 0 0 8px;
+  background: transparent;
+  border: 0;
 }
 
 .diary-tab {
@@ -2123,11 +2103,6 @@ button {
     border-bottom: 1px solid var(--line);
   }
 
-  .diary-index-head {
-    grid-column: 1 / -1;
-    padding-bottom: 10px;
-  }
-
   .diary-tab {
     grid-template-columns: 26px minmax(0, 1fr);
     min-height: 40px;
@@ -2189,7 +2164,6 @@ button {
   <section class="notebook-shell" aria-label="日记本预览">
     <div class="notebook">
       <nav class="diary-index" id="diaryIndex" aria-label="日记日期索引">
-        <div class="diary-index-head"><strong>うちはオビト</strong><span>全部日记手稿</span></div>
       </nav>
       <section class="diary-page-wrap" id="diaryPages" aria-live="polite"></section>
     </div>
@@ -3098,11 +3072,7 @@ setEntry(0);
 
 </style>
 </head>
-<body class="chapter-thread"><div id="workskin"><div class="ao3-score-app ao3-position-app"><div class="ao3-rank-card"><div class="ao3-forum-header">
-<p class="ao3-forum-back">‹</p>
-<p><strong>不要给木叶高中的校写情书了，她早就有男朋友了</strong></p>
-<p class="ao3-forum-menu">⋮</p>
-</div><div class="ao3-participants"><p>💬 共有 22 条回复</p></div><div class="ao3-rank-list"><details class="ao3-rank-item" open="open"><summary>
+<body class="chapter-thread"><div id="workskin"><div class="ao3-score-app ao3-position-app"><div class="ao3-rank-card"><div class="ao3-participants"><p>💬 共有 22 条回复</p></div><div class="ao3-rank-list"><details class="ao3-rank-item" open="open"><summary>
   <span class="ao3-rank-number">1</span>
   <span class="ao3-rank-avatar ao3-tone-aka">🐝</span>
   <span class="ao3-rank-info"><strong>小飞哥</strong><br /><small>楼主</small></span>
@@ -4323,14 +4293,10 @@ setEntry(0);
     }
   </style>
 </head>
-<body>
+<body class="chapter-game">
   <main class="game-app">
     <div class="game-shell">
       <aside class="side-panel" aria-label="game progress">
-        <div class="side-cover">
-          <p>chapter 06</p>
-          <h1>刀剑易得，真心难求</h1>
-        </div>
         <nav class="progress-list" id="progressList"></nav>
         <p class="status-card" id="statusText"></p>
       </aside>
@@ -4882,7 +4848,7 @@ setEntry(0);
     const chapters = [
       {
             "label": "主题 01",
-            "title": "🥰卡卡西们，来讲讲最近和带土最满意的一次性爱吧！",
+            "title": "大家都品鉴过哪些类型的咔咔吸呢？",
             "author": "匿名用户",
             "date": "2026-05-22 21:09",
             "replies": "7",
@@ -4894,7 +4860,7 @@ setEntry(0);
       },
       {
             "label": "主题 02",
-            "title": "大家都品鉴过哪些类型的咔咔吸呢？",
+            "title": "🥰卡卡西们，来讲讲最近和带土最满意的一次性爱吧！",
             "author": "匿名用户",
             "date": "2026-05-25 00:14",
             "replies": "7",
@@ -5094,12 +5060,16 @@ button:focus-visible,.tab-item:focus-visible,[role=button]:focus-visible{outline
 .chapter-diary:before{display:none!important}
 .chapter-diary,.chapter-diary .diary-app{background:transparent!important}
 .chapter-diary .diary-app{padding:0!important}
+.chapter-diary .diary-index{background:transparent!important;border:0!important;box-shadow:none!important;color:var(--theme-ink)!important}
 .chapter-diary .diary-page-wrap{background:var(--theme-paper)!important;border:0!important;box-shadow:none!important}
 .chapter-diary .diary-page{border:0!important;border-radius:0!important;box-shadow:none!important}
 .chapter-thread:before{display:none!important}
+.chapter-thread{margin:0!important;padding:0!important}
 .chapter-thread,.chapter-thread #workskin,.chapter-thread .ao3-score-app,.chapter-thread .ao3-position-app{background:transparent!important}
 .chapter-thread .ao3-score-app,.chapter-thread .ao3-position-app{max-width:none!important;padding:0!important}
 .chapter-thread .ao3-rank-card{background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:0!important}
+.chapter-game:before{display:none!important}
+.chapter-game .side-panel{position:static!important;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;overflow:visible!important}
 .side-panel,.side-cover,.diary-index{background:var(--theme-deep)!important;color:#fffaf2!important;border-color:var(--theme-line)!important}
 .side-panel h1,.side-panel h2,.side-cover h1,.side-cover h2,.diary-index h1,.diary-index h2{color:#fffaf2!important}
 .diary-tab,.progress-item,.badge,.stamp{background:var(--theme-soft)!important;color:var(--theme-deep)!important;border-color:var(--theme-line)!important}
@@ -5150,11 +5120,6 @@ input,textarea,select{border-color:var(--theme-line)!important;background:#fffdf
     function resizeChapterFrame() {
       const doc = chapterFrame.contentDocument;
       if (!doc || !doc.documentElement || !doc.body) return;
-      if (activeChapterIndex === 4) {
-        doc.documentElement.style.overflowY = 'auto';
-        doc.body.style.overflowY = 'auto';
-        return;
-      }
       doc.documentElement.style.overflowY = 'hidden';
       doc.body.style.overflowY = 'hidden';
       const visibleBlocks = Array.from(doc.body.children).filter(function(el) {
@@ -5168,7 +5133,7 @@ input,textarea,select{border-color:var(--theme-line)!important;background:#fffdf
         return Math.max(bottom, rect.bottom + marginBottom);
       }, 0);
       const currentHeight = chapterFrame.getBoundingClientRect().height || 720;
-      const maxFrameHeight = activeChapterIndex === 3 || window.matchMedia('(max-width: 720px)').matches ? 12000 : 2600;
+      const maxFrameHeight = 60000;
       const nextHeight = Math.max(620, Math.min(maxFrameHeight, Math.ceil(contentBottom + 12)));
       if (Math.abs(nextHeight - currentHeight) > 18) {
         chapterFrame.style.height = nextHeight + 'px';
@@ -5180,7 +5145,6 @@ input,textarea,select{border-color:var(--theme-line)!important;background:#fffdf
       resizeChapterFrame();
       const doc = chapterFrame.contentDocument;
       if (!doc || !doc.body) return;
-      if (activeChapterIndex === 4) return;
       if ('ResizeObserver' in window) {
         frameResizeObserver = new ResizeObserver(resizeChapterFrame);
         frameResizeObserver.observe(doc.body);
@@ -5201,9 +5165,8 @@ input,textarea,select{border-color:var(--theme-line)!important;background:#fffdf
       readerMeta.textContent = chapter.author + ' \u00b7 ' + chapter.date + ' \u00b7 ' + chapter.replies + ' \u56de\u7b54 \u00b7 ' + chapter.views + ' \u70b9\u51fb';
       readerBadge.textContent = chapter.label;
       activeChapterIndex = index;
-      readerView.classList.toggle('flat-thread-reader', index === 3 || index === 4);
-      chapterFrame.classList.toggle('is-scrollable', index === 4);
-      chapterFrame.style.height = index === 4 ? '' : '720px';
+      readerView.classList.toggle('flat-thread-reader', index >= 3);
+      chapterFrame.style.height = '720px';
       chapterFrame.onload = watchChapterFrame;
       chapterFrame.srcdoc = html;
       homeView.classList.add('hidden');
@@ -5217,7 +5180,6 @@ input,textarea,select{border-color:var(--theme-line)!important;background:#fffdf
       chapterFrame.removeAttribute('srcdoc');
       activeChapterIndex = -1;
       readerView.classList.remove('flat-thread-reader');
-      chapterFrame.classList.remove('is-scrollable');
       chapterFrame.style.height = '720px';
       readerView.classList.remove('active');
       homeView.classList.remove('hidden');
