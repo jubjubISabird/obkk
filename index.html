@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>欧比咔咔之家</title>
-  <meta name="description" content="J某人的一些短小脑洞 爱看家产用各种皮套开银趴">
+  <meta name="description" content="J某人的一些脑洞罢了">
   <meta name="theme-color" content="#8b5f4a">
   <style>
     :root {
@@ -392,7 +392,7 @@
       .password-screen::before { right: 3vw; bottom: 3vh; font-size: 42px; }
       .password-card { box-shadow: 10px 10px 0 var(--accent-deep); }
       .password-row { grid-template-columns: 1fr; }
-      .forum-header::before { top: 40%; font-size: clamp(42px,17vw,76px); }
+      .forum-header::before { top: 40%; font-size: clamp(30px,13vw,56px); }
       .topic-row { grid-template-columns: 36px minmax(0,1fr); padding: 10px 12px; }
       .topic-row:hover { padding-left: 16px; }
       .topic-avatar { width: 36px; height: 36px; }
@@ -4711,14 +4711,16 @@ setEntry(0);
     }
 
     function scrollChapterToTop() {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      try {
-        if (window.frameElement) {
-          window.frameElement.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      } catch (error) {
-        /* The inner document still scrolls to its own top if the parent is unavailable. */
+      function syncTop() {
+        window.scrollTo(0, 0);
+        window.parent.postMessage({ type: "obk-scroll-reader-top" }, "*");
       }
+      syncTop();
+      window.requestAnimationFrame(function() {
+        window.requestAnimationFrame(syncTop);
+      });
+      window.setTimeout(syncTop, 120);
+      window.setTimeout(syncTop, 360);
     }
 
     function renderProgress() {
@@ -5215,6 +5217,10 @@ input,textarea,select{border-color:var(--theme-line)!important;background:#fffdf
       if (event.key === 'Escape' && usersModal.classList.contains('active')) closeUsers();
     });
     backButton.addEventListener('click', closeChapter);
+    window.addEventListener('message', function(event) {
+      if (event.source !== chapterFrame.contentWindow || !event.data || event.data.type !== 'obk-scroll-reader-top') return;
+      readerView.scrollIntoView({ block: 'start', behavior: 'auto' });
+    });
     window.addEventListener('beforeunload', stopFrameResizeWatchers);
 
     renderTopics();
