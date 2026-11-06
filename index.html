@@ -5307,6 +5307,7 @@ input,textarea,select{border-color:var(--theme-line)!important;background:#fffdf
       readerBadge.textContent = chapter.label;
       activeChapterIndex = index;
       readerView.classList.toggle('flat-thread-reader', index >= 3);
+      chapterFrame.setAttribute('scrolling', index === 0 ? 'no' : 'auto');
       chapterFrame.style.height = '720px';
       chapterFrame.onload = watchChapterFrame;
       chapterFrame.srcdoc = html;
@@ -5319,6 +5320,7 @@ input,textarea,select{border-color:var(--theme-line)!important;background:#fffdf
       stopFrameResizeWatchers();
       chapterFrame.onload = null;
       chapterFrame.removeAttribute('srcdoc');
+      chapterFrame.setAttribute('scrolling', 'auto');
       activeChapterIndex = -1;
       readerView.classList.remove('flat-thread-reader');
       chapterFrame.style.height = '720px';
